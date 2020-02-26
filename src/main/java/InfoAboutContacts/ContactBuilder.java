@@ -119,7 +119,7 @@ public class ContactBuilder implements IContactBuilder{
     public void setAddress() {
         address=new Address(country,city,street, houseOfFlat, index);
     }
-    public Contact getContact() throws NotEnoughInformation {
+    public InfoAboutContacts.Contact getContact() throws NotEnoughInformation {
         if(getName()==null || getSurname()==null) {
             throw new NotEnoughInformation("Введите обязательные поля!");
         }
