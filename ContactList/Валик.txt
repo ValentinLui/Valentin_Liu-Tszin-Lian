@@ -1,0 +1,11 @@
+Name: Валик
+Surname: Лю
+Patronymic: Владимирович
+BirthDay: 0.0.0
+Sex: false
+Citizenship: null
+FamilyStatus: null
+WebSite: null
+Email: null
+Work: null
+Address: Address(country=null, city=null, street=null, houseOrFlat=0, index=0)
