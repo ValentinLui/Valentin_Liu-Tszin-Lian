@@ -3,8 +3,10 @@ package InfoAboutContacts;
 import Exceptions.NotEnoughInformation;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
-public class ContactBuilder implements IContactBuilder{
+public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
+    private static final Logger log = Logger.getLogger(String.valueOf(ContactBuilder.class));
     private String surname;
     private String patronymic;
     private int dayOfBirth;
@@ -92,7 +94,7 @@ public class ContactBuilder implements IContactBuilder{
 
     @Override
     public void setCitizenship(String Citizenship) {
-        this.citizenship=citizenship;
+        this.citizenship=Citizenship;
     }
 
     @Override
@@ -123,6 +125,7 @@ public class ContactBuilder implements IContactBuilder{
         if(getName()==null || getSurname()==null) {
             throw new NotEnoughInformation("Введите обязательные поля!");
         }
+        log.info("Создается контакт!");
         return new Contact(name,surname,patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, address);
     }
 }

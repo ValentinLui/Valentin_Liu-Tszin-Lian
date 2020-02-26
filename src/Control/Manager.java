@@ -1,4 +1,5 @@
 package Control;
+import Exceptions.NotEnoughInformation;
 import Exceptions.NotFoundObject;
 import Exceptions.ObjectAlreadyCreated;
 import InfoAboutContacts.Contact;
@@ -6,8 +7,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Manager {
+    private static final Logger log = Logger.getLogger(String.valueOf(Manager.class));
     private ArrayList<Contact> contactList;
     private Manager() throws IOException {
         contactList = new ArrayList<Contact>();
@@ -40,20 +43,23 @@ public class Manager {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+        log.info("Добавляем контакт в записную книжку!");
     }
     public void RemoveContact(String Name) throws NotFoundObject {
         for(Contact contact:contactList){
             if(contact.getName().equals(Name)){
                 new File("ContactList/"+contact.getName()+".txt").delete();
                 contactList.remove(contact);
+                log.info("Удаляем контакт в записную книжку!");
                 break;
             }
-            else throw new NotFoundObject("Не найден, указанный вами, объект!");
         }
+        throw new NotFoundObject("Не найден, указанный вами, объект!");
     }
     public Contact FindByName(String Name) throws NotFoundObject { //доделать если таких контактов несколько
         for(Contact contact:contactList){
             if(contact.getName().equals(Name) || Name.contains(contact.getName())){
+                log.info("Контакт найден!");
                 return  contact;
             }
         }
