@@ -1,23 +1,40 @@
 package Control;
-import Exceptions.NotEnoughInformation;
 import Exceptions.NotFoundObject;
 import Exceptions.ObjectAlreadyCreated;
 import InfoAboutContacts.Contact;
-import java.io.File;
-import java.io.FileWriter;
+import lombok.Getter;
+import lombok.ToString;
+import util.Controller;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+@ToString
+@Getter
 public class Manager {
     private static final Logger log = Logger.getLogger(String.valueOf(Manager.class));
+    private Controller controller;
     private ArrayList<Contact> contactList;
-    private Manager() throws IOException {
+    private ArrayList<Integer> poolFreeId;
+    public static int maxId;
+    public static int maxAddressId;
+    private Manager() throws IOException, SQLException {
         contactList = new ArrayList<Contact>();
-        new File("ContactList").mkdirs();
+        poolFreeId = new ArrayList<Integer>();
+        controller = new Controller();
+        controller.getContacts(this.contactList, this.poolFreeId, this.maxAddressId);
+        for (Contact contact:contactList) {
+            if(contact.getId()>maxId)
+                maxId=contact.getId();
+        }
+        for (Integer id:poolFreeId) {
+            if(id>maxId)
+                maxId=id;
+        }
     }
     private static  Manager singleton;
-    public static Manager getInstance() throws ObjectAlreadyCreated, IOException {
+    public static Manager getInstance() throws ObjectAlreadyCreated, IOException, SQLException {
         if (singleton == null) {
             singleton = new Manager();
         } else {
@@ -25,33 +42,18 @@ public class Manager {
         }
         return singleton;
     }
-    public void AddContact(Contact contact){
+    public void AddContact(Contact contact) throws SQLException {
         contactList.add(contact);
-        try(FileWriter writer = new FileWriter("ContactList/"+contact.getName()+".txt", false ) )
-        {
-            writer.write("Name: "+contact.getName()
-                    +"\nSurname: "+contact.getSurname()
-                    +"\nPatronymic: "+contact.getPatronymic()
-                    +"\nBirthDay: "+contact.getDayOfBirth()+"."+contact.getMonthOfBirth()+"."+contact.getYearOfBirth()
-                    +"\nSex: "+contact.isSex()
-                    +"\nCitizenship: "+contact.getCitizenship()
-                    +"\nFamilyStatus: "+contact.getFamilyStatus()
-                    +"\nWebSite: "+contact.getWebSite()
-                    +"\nEmail: " +contact.getEmail()
-                    +"\nWork: "+contact.getWork()
-                    +"\nAddress: "+contact.getAddress());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        controller.addContact(contact);
         log.info("Добавляем контакт в записную книжку!");
     }
-    public void RemoveContact(String Name) throws NotFoundObject {
+    public void RemoveContact(String Name) throws NotFoundObject, SQLException {
         for(Contact contact:contactList){
             if(contact.getName().equals(Name)){
-                new File("ContactList/"+contact.getName()+".txt").delete();
+                controller.deleteContact(contact.getId());
                 contactList.remove(contact);
-                log.info("Удаляем контакт в записную книжку!");
-                break;
+                log.info("Удаляем контакт из записной книжки!");
+                return;
             }
         }
         throw new NotFoundObject("Не найден, указанный вами, объект!");

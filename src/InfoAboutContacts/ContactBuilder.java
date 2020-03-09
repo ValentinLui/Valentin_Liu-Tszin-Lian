@@ -1,5 +1,6 @@
 package InfoAboutContacts;
 
+import Control.Manager;
 import Exceptions.NotEnoughInformation;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.logging.Logger;
 
 public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
     private static final Logger log = Logger.getLogger(String.valueOf(ContactBuilder.class));
+    private int id;
     private String surname;
     private String patronymic;
     private int dayOfBirth;
@@ -20,11 +22,21 @@ public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
     private String email;
     private String work;
     private Address address;
+    private int idAddress= Manager.maxAddressId++;
     private String country;
     private String city;
     private String street;
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    private String phone;
     private int houseOfFlat;
     private short index;
+
+    public void setId(){this.id=Manager.maxId;
+    Manager.maxId++;}
 
     public void setIndex(short index) {
         this.index = index;
@@ -119,13 +131,13 @@ public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
 
     @Override
     public void setAddress() {
-        address=new Address(country,city,street, houseOfFlat, index);
+        address=new Address(idAddress,country,city,street, houseOfFlat, index);
     }
     public InfoAboutContacts.Contact getContact() throws NotEnoughInformation {
         if(getName()==null || getSurname()==null) {
             throw new NotEnoughInformation("Введите обязательные поля!");
         }
         log.info("Создается контакт!");
-        return new Contact(name,surname,patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, address);
+        return new Contact(idAddress,name,surname,patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, phone, address);
     }
 }

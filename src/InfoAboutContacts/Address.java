@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
+    private int idAddress;
     private String country;
     private String city;
     private String street;

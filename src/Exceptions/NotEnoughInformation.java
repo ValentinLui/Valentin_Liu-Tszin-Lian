@@ -1,5 +1,4 @@
 package Exceptions;
-import main.java.Main;
 import java.util.logging.Logger;
 
 public class NotEnoughInformation extends  Exception{
