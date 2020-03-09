@@ -35,7 +35,7 @@ public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
     private int houseOfFlat;
     private short index;
 
-    public void setId(){this.id=Manager.maxId;
+    public void setId(){this.id=Manager.maxId+1;
     Manager.maxId++;}
 
     public void setIndex(short index) {
@@ -131,13 +131,13 @@ public class ContactBuilder implements InfoAboutContacts.IContactBuilder {
 
     @Override
     public void setAddress() {
-        address=new Address(idAddress,country,city,street, houseOfFlat, index);
+        address=new Address(country,city,street, houseOfFlat, index);
     }
     public InfoAboutContacts.Contact getContact() throws NotEnoughInformation {
         if(getName()==null || getSurname()==null) {
             throw new NotEnoughInformation("Введите обязательные поля!");
         }
         log.info("Создается контакт!");
-        return new Contact(idAddress,name,surname,patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, phone, address);
+        return new Contact(id,name,surname,patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, phone, address);
     }
 }

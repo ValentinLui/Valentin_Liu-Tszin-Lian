@@ -28,11 +28,4 @@ public class Contact {
     private String work;
     private String phone;
     private Address address;
-    public void setAddress(String Country, String City,String Street, int HouseOrFlat,int index){
-        address.setCountry(Country);
-        address.setCity(City);
-        address.setStreet(Street);
-        address.setHouseOrFlat(HouseOrFlat);
-        address.setIndex((short) index);
-    }
 }

@@ -23,7 +23,7 @@ public class Manager {
         contactList = new ArrayList<Contact>();
         poolFreeId = new ArrayList<Integer>();
         controller = new Controller();
-        controller.getContacts(this.contactList, this.poolFreeId, this.maxAddressId);
+        controller.getContacts(this.contactList, this.poolFreeId);
         for (Contact contact:contactList) {
             if(contact.getId()>maxId)
                 maxId=contact.getId();

@@ -1,4 +1,5 @@
 package util;
+import Control.Manager;
 import InfoAboutContacts.Address;
 import InfoAboutContacts.Contact;
 
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 public class Controller {
     private final static String SQL_GET_USERINFO = "select * from contacts";
     private final static String SQL_GET_ADDRESS = "select * from address";
-    private final static String SQL_ADD_ADDRESS = "INSERT contacts(idContacts, Name, Surname, patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, phone) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private final static String SQL_ADD_USER = "INSERT contacts(idContacts, Name, Surname, patronymic, dayOfBirth, monthOfBirth, yearOfBirth, sex, citizenship, familyStatus, webSite, email, work, phone) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private final static String SQL_ADD_ADDRESS = "INSERT  address(idAddress, country, city, street, flatOrHouse,homeIndex) VALUES(?,?,?,?,?,?)";
     private final static String SQL_GET_FREEID = "select * from freeid";
     private final static String SQL_DELETE_USER_BY_ID = "DELETE FROM contacts WHERE idcontacts = ? ";
     private final static String SQL_ADD_FREE_ID= "INSERT freeid(freeid) VALUES(?)";
@@ -23,8 +25,7 @@ public class Controller {
         connection.close();
     }
 
-    public void getContacts(ArrayList<Contact> contactList,ArrayList<Integer> poolFreeId, int MaxAddressId) {
-        MaxAddressId=0;
+    public void getContacts(ArrayList<Contact> contactList,ArrayList<Integer> poolFreeId) {
         PreparedStatement ps = null;
         PreparedStatement ps1 = null;
         try {
@@ -70,8 +71,8 @@ public class Controller {
             ps = connection.prepareStatement(SQL_GET_ADDRESS);
             rs = ps.executeQuery();
             while (rs.next()) {
-                if(MaxAddressId<rs.getInt(1))
-                    MaxAddressId=rs.getInt(1);
+                if(Manager.maxAddressId<rs.getInt(1))
+                    Manager.maxAddressId=rs.getInt(1);
             }
             ps = connection.prepareStatement(SQL_GET_FREEID);
             rs = ps.executeQuery();
@@ -86,7 +87,16 @@ public class Controller {
     }
 
     public void addContact(Contact contact) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement(SQL_ADD_ADDRESS);
+        PreparedStatement  ps = connection.prepareStatement(SQL_ADD_ADDRESS);
+        ps.setString(1, String.valueOf(Manager.maxAddressId));
+        ps.setString(2, String.valueOf(contact.getAddress().getCountry()));
+        ps.setString(3, String.valueOf(contact.getAddress().getCity()));
+        ps.setString(4, String.valueOf(contact.getAddress().getStreet()));
+        ps.setString(5, String.valueOf(contact.getAddress().getHouseOrFlat()));
+        ps.setString(6, String.valueOf(contact.getAddress().getIndex()));
+        ps.executeUpdate();
+
+        ps = connection.prepareStatement(SQL_ADD_USER);
         ps.setString(1, String.valueOf(contact.getId()));
         ps.setString(2, String.valueOf(contact.getName()));
         ps.setString(3, String.valueOf(contact.getSurname()));
@@ -103,6 +113,7 @@ public class Controller {
         ps.setString(14, String.valueOf(contact.getPhone()));
         ps.executeUpdate();
     }
+
 
     public void deleteContact(int id) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(SQL_DELETE_USER_BY_ID);
