@@ -4,6 +4,8 @@ import Exceptions.NotFoundObject;
 import Exceptions.ObjectAlreadyCreated;
 import InfoAboutContacts.Contact;
 import InfoAboutContacts.ContactBuilder;
+import Serialization.Excel.ApatchPOIClass;
+import Serialization.JSON.JsonSerialization;
 import util.Controller;
 
 import java.io.IOException;
@@ -17,12 +19,16 @@ public class Main {
         System.out.println(manager.FindByName("Валентин").toString());
         System.out.println(manager.maxId);
         System.out.println(manager.maxAddressId);
-        ContactBuilder contactBuilder= new ContactBuilder();
+       /* ContactBuilder contactBuilder= new ContactBuilder();
         contactBuilder.setName("Андрей");
         contactBuilder.setSurname("Пупкин");
         contactBuilder.setId();
         contactBuilder.setAddress();
-        manager.AddContact(contactBuilder.getContact());
+        manager.AddContact(contactBuilder.getContact());*/
         System.out.println(manager.maxId);
+        JsonSerialization.Serialization();
+        JsonSerialization.Deserialization();
+        System.out.println(Manager.getContactList().toString());
+        ApatchPOIClass.Serialization();
     }
 }

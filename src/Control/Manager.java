@@ -15,7 +15,13 @@ import java.util.logging.Logger;
 public class Manager {
     private static final Logger log = Logger.getLogger(String.valueOf(Manager.class));
     private Controller controller;
-    private ArrayList<Contact> contactList;
+    private static ArrayList<Contact> contactList;
+    public static ArrayList<Contact> getContactList(){
+        return contactList;
+    }
+    public static void setContactList(ArrayList<Contact> ContactList){
+        contactList=ContactList;
+    }
     private ArrayList<Integer> poolFreeId;
     public static int maxId;
     public static int maxAddressId;
